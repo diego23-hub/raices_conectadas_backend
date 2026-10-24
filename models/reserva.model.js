@@ -9,11 +9,11 @@ const reserva = sequelize.define(
             autoIncrement: true
         },
         idUsuario:{
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         idPaquete:{
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         fechaInicio: {
@@ -46,15 +46,15 @@ const reserva = sequelize.define(
         },
         bebes: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         jovenes:{
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         ninos:{
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         estado: {
             type:DataTypes.STRING,

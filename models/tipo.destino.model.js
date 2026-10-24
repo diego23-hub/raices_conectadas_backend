@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require('../config/database');
-const Destino = sequelize.define(
+const tipoDestino = sequelize.define(
     "tipoDestino",
     {
         id: {
