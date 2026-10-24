@@ -4,7 +4,7 @@ const evento = require("./evento.model");
 const paquete = require("./paquete.model");
 const proveedor = require("./proveedor.model");
 const reserva = require("./reserva.model");
-const notificacion = require("./notificacion.model");
+const notificacion=require("./notificacion.model")
 const pago = require("./pago.model");
 
 const tipoDestino = require("./tipo.destino.model");
@@ -111,3 +111,22 @@ permiso.belongsToMany(rol,{
     foreignKey: "idPermiso",
     otherKey: "idRol"
 });
+
+module.exports={
+    sequelize,
+    usuario,
+    destino,
+    evento,
+    paquete,
+    proveedor,
+    reserva,
+    notificacion,
+    pago,
+    tipoDestino,
+    tipoEvento,
+    tipoDoc,
+    tipoProveedor,
+    rol,
+    rolPermiso,
+    permiso
+};

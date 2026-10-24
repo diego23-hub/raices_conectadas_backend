@@ -1,7 +1,6 @@
 const { DataTypes } = require("sequelize");
-
-
-
+const bcrypt=require("bcrypt");
+const sequelize=require("../config/database");
 
 const user = sequelize.define('user',{
     correo:{ type: DataTypes.STRING, allowNull:false, unique: true},
