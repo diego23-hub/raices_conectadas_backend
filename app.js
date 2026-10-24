@@ -4,6 +4,8 @@ const logger=require("./middlewares/logger")
 const app=express();
 const corsMiddleware=require("./middlewares/corsMiddleware");
 app.use(corsMiddleware);
+app.use(express.json());
+app.use(logger.logger);
 
 const PORT=3000;
 
@@ -16,23 +18,18 @@ const reservaRoutes=require("./routes/reserva.routes");
 const authRoutes=require("./routes/auth.routes");
 const rolRoutes=require("./routes/rol.routes");
 
-const handleError=require("./middlewares/handleError");
-
-app.use(handleError);
-app.use(express.json());
-app.use(logger.logger);
-
 app.use('/usuario', usuarioRoutes);
 app.use('/destino', destinoRoutes);
 app.use('/evento', eventoRoutes);
-app.use('/paquete', paqueteRoutes);
+app.use('/paquete', authenticate(),paqueteRoutes);
 app.use('/proveedor', proveedorRoutes);
-app.use('/reserva', reservaRoutes);
+app.use('/reserva',authenticate(), reservaRoutes);
 app.use('/auth', authRoutes);
 app.use('/roles', rolRoutes);
 
+const handleError=require("./middlewares/handleError");
 app.use(handleError);
 
 app.listen(PORT, () => {
-    console.log('Servidor ejecutándose en http://localhost:$(PORT');
+    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });

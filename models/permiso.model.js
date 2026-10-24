@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 const sequelize=require("../config/database");
 
-const permiso= sequelize.define("permiso",{
+const Permiso= sequelize.define("Permiso",{
     nombre: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -18,4 +18,4 @@ const permiso= sequelize.define("permiso",{
     }
 );
 
-module.exports= permiso;
+module.exports= Permiso;
