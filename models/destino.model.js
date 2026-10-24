@@ -1,28 +1,29 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 const sequelize = require('../config/database');
-
-const Destino = sequelize.define('Cliente', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+const Evento = sequelize.define(
+    "Evento",
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        nombre:{
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        descripcion:{
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        idTipoDestino:{
+            type: DataTypes.INTEGER,
+            allowNull: false
+        }
     },
-    nombre: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    departamento: {
-        type: DataTypes.STRING
-    },
-    tipo: {
-        type: DataTypes.STRING
-    },
-    descripcion: {
-        type: DataTypes.STRING
+    {
+        tableName: 'destino',
+        timestamps: false
     }
-}, {
-    tableName: 'destinos',
-    timestamps: false
-});
-
-module.exports = Destino;
+);
+module.exports=Evento;
