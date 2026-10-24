@@ -30,20 +30,32 @@ const Usuario = sequelize.define(
         },
         correo: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique:true
         },
         contrasena: {
             type: DataTypes.STRING,
             allowNull: false
         },
         idRol: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false
         }
     },
     {
         tableName: 'usuario',
-        timestamps: false
+        timestamps: false,
+        hooks: {
+            beforeCreate: async (usuario) =>{
+                usuario.contrasena = await bcrypt.hash(usuario.contrasena, 10);
+            },
+            beforeUpdate: async (usuario) => {
+            if (usuario.changed('contrasena')){
+                const salt = await bcrypt.genSalt(10);
+                usuario.contrasena=await bcrypt.hash(usuario.contrasena, salt);
+            }
+        }
+        }
     }
 );
 module.exports = Usuario;
