@@ -101,10 +101,10 @@ proveedor.belongsTo(destino,{
     foreignKey:"idDestino"
 });
 
-rol.hasMany(user,{
+rol.hasMany(usuario,{
     foreignKey: "idRol"
 });
-user.belongsTo(rol,{
+usuario.belongsTo(rol,{
     foreignKey:"idRol"
 });
 rol.belongsToMany(permiso,{
@@ -132,7 +132,6 @@ module.exports={
     tipoEvento,
     tipoDoc,
     tipoProveedor,
-    user,
     rol,
     rolPermiso,
     permiso
