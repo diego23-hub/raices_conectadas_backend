@@ -6,11 +6,10 @@ const authrorize = (requiredPermission)=>{
             });
         }
 
-        const permiso = req.user.permiso || [];
-
-        const tienePermiso= requiredPermission.some((permiso)=>
-            permiso.includes(permiso)
-        );
+        const permisos = req.user.permisos || [];
+        if (!permisos.includes(requiredPermission)) {
+            return res.status(403).json({ message: "No tiene permisos para realizar esta acción" });
+        }
         if (!tienePermiso){
             return res.status(403).json({
                 message: "No tiene permisos para realizar esta acción"

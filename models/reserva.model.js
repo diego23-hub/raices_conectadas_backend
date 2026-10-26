@@ -46,15 +46,18 @@ const reserva = sequelize.define(
         },
         bebes: {
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false,
+            defaultValue: 0
         },
         jovenes:{
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false,
+            defaultValue: 0
         },
         ninos:{
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false,
+            defaultValue: 0
         },
         estado: {
             type:DataTypes.STRING,
@@ -62,7 +65,8 @@ const reserva = sequelize.define(
         },
         numSeguimiento:{
             type:DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true, 
+            unique:true
         }
     },
     {

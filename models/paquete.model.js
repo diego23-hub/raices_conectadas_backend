@@ -17,15 +17,15 @@ const paquete = sequelize.define(
             allowNull: false
         },
         descripcion:{
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         incluye:{
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         itinerario:{
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         limitePersonas:{

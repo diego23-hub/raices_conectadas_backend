@@ -13,7 +13,7 @@ const destino = sequelize.define(
             allowNull: false
         },
         descripcion:{
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         idTipoDestino:{

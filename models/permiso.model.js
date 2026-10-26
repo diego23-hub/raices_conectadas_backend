@@ -14,7 +14,7 @@ const Permiso= sequelize.define("Permiso",{
     },
 },{
     tableName: "permiso",
-    timeStamps: false,
+    timestamps: false,
     }
 );
 

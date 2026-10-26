@@ -13,8 +13,12 @@ const proveedor = sequelize.define(
             allowNull: false
         },
         ubicacion:{
-            type: DataTypes.DECIMAL,
+            type: DataTypes.TEXT,
             allowNull: false
+        },
+        descripcion:{
+            type: DataTypes.TEXT,
+            allowNull:false
         },
         telefono:{
             type: DataTypes.STRING,

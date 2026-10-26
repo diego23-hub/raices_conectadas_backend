@@ -14,7 +14,7 @@ const Usuario = sequelize.define(
             allowNull: false
         },
         numDoc:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         nombres: {

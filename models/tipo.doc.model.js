@@ -13,7 +13,7 @@ const tipoDoc = sequelize.define(
             allowNull: false
         },
         aplicaIva:{
-            type: DataTypes.STRING,
+            type: DataTypes.BOOLEAN,
             allowNull:false
         }
     },

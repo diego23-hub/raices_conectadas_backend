@@ -1,9 +1,9 @@
-const DB_TYPE = process.env.DB_TYPE || 'mysql';
+require('dotenv').config();
+const { Sequelize } = require('sequelize');
 
-let sequelize;
-if (DB_TYPE === 'mysql') {
-    sequelize = new Sequelize('demo', 'root', '123456', {
-        host: 'localhost',
-        dialect: 'mysql'
-    });
-}
+const sequelize = new Sequelize(
+  process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD,
+  { host: process.env.DB_HOST, dialect: 'mysql', logging: false }
+);
+
+module.exports = sequelize;

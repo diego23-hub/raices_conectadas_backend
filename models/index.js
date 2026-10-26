@@ -12,7 +12,7 @@ const tipoEvento = require("./tipo.evento.model");
 const tipoDoc = require("./tipo.doc.model");
 const tipoProveedor = require("./tipo.proveedor.model");
 
-const user = require("./user.model");
+const sequelize=require("../config/database");
 const rol = require("./rol.model");
 const rolPermiso = require("./rol.permiso.model");
 const permiso = require("./permiso.model");

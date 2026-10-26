@@ -1,20 +1,18 @@
 const jwt = require('jsonwebtoken');
-const BusinessError=require("../errors/BusinessError");
 
-const aunthenticate = (req,res,next) => {
+const authenticate = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    if(!authHeader){
-        return next(new BusinessError("Deebe enviar un token."));
+    if (!authHeader) {
+        return res.status(401).json({ message: 'Debe enviar un token.' });
     }
     const token = authHeader.split(' ')[1];
-    try{
+    try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user=decoded;
+        req.user = decoded;
         next();
-
-    } catch(error){
-        next(new BusinessError("Token inválido."));
+    } catch (error) {
+        return res.status(401).json({ message: 'Token inválido.' });
     }
 };
 
-module.exports=authrorize;
+module.exports = authenticate;
