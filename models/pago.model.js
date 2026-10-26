@@ -12,8 +12,8 @@ const pago = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        metodo:{
-            type: DataTypes.STRING,
+        idMetodoPago:{
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         referencia:{
@@ -25,7 +25,7 @@ const pago = sequelize.define(
             allowNull: false
         },
         fecha:{
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         estado:{

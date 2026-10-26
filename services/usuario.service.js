@@ -1,10 +1,11 @@
-const bcrypt = require('bcrypt');
-const Usuario = require('../models/usuario.model');
-const jwtUtil = require('../utils/jwt');
+const { usuario: Usuario, rol } = require('../models');
 
 exports.register = async (data) => {
-
-    return await Usuario.create(data)
+    const { idRol, ...datosSeguros } = data;   // ignora el rol que mande el cliente
+    const rolViajero = await rol.findOne({ where: { nombre: 'viajero' } });
+    const creado = await Usuario.create({ ...datosSeguros, idRol: rolViajero.id });
+    const { contrasena, ...sinClave } = creado.toJSON();
+    return sinClave;
 };
 
 exports.login = async (correo, contrasena) => {

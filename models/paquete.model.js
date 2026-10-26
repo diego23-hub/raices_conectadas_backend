@@ -20,6 +20,10 @@ const paquete = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: false
         },
+        duracion:{
+            type: DataTypes.DATE,
+            allowNull:false
+        },
         incluye:{
             type: DataTypes.TEXT,
             allowNull: false
