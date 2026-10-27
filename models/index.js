@@ -6,6 +6,7 @@ const proveedor = require("./proveedor.model");
 const reserva = require("./reserva.model");
 const notificacion=require("./notificacion.model")
 const pago = require("./pago.model");
+const metodoPago = require("./metodo.pago.model");
 
 const tipoDestino = require("./tipo.destino.model");
 const tipoEvento = require("./tipo.evento.model");
@@ -92,6 +93,13 @@ reserva.hasMany(pago,{
 });
 pago.belongsTo(reserva,{
     foreignKey:"idReserva"
+});
+
+metodoPago.hasMany(pago,{
+    foreignKey:"idMetodoPago"
+});
+pago.belongsTo(metodoPago,{
+    foreignKey:"idMetodoPago"
 });
 
 destino.hasMany(proveedor,{

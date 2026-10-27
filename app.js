@@ -3,8 +3,8 @@ const express=require('express')
 const logger=require("./middlewares/logger")
 const app=express();
 const corsMiddleware=require("./middlewares/corsMiddleware");
-const authenticate = require('./middlewares/auth');
 app.use(corsMiddleware);
+const authenticate = require('./middlewares/auth');
 app.use(express.json());
 app.use(logger.logger);
 
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 sequelize.authenticate()
   .then(() => console.log('Conectado a MySQL'))
   .catch((error) => console.error('Error de conexión a MySQL:', error.message));
-  
+
 const usuarioRoutes=require("./routes/usuario.routes");
 const destinoRoutes=require("./routes/destino.routes");
 const eventoRoutes=require("./routes/evento.routes");
