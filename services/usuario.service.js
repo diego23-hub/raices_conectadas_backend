@@ -1,6 +1,7 @@
 const { usuario: Usuario, rol } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const SystemError = require('../errors/SystemError');
 
 const handleError = (error, defaultMessage) => {
     if (error instanceof BusinessError || error instanceof SystemError) {
