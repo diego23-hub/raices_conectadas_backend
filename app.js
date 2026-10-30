@@ -4,7 +4,7 @@ const logger=require("./middlewares/logger")
 const app=express();
 const corsMiddleware=require("./middlewares/corsMiddleware");
 app.use(corsMiddleware);
-const authenticate = require('./middlewares/auth');
+const authenticate = require('./middlewares/authenticate');
 app.use(express.json());
 app.use(logger.logger);
 
@@ -27,7 +27,7 @@ const rolRoutes=require("./routes/rol.routes");
 app.use('/usuario', usuarioRoutes);
 app.use('/destino', destinoRoutes);
 app.use('/evento', eventoRoutes);
-app.use('/paquete', authenticate,paqueteRoutes);
+app.use('/paquete',paqueteRoutes);
 app.use('/proveedor', proveedorRoutes);
 app.use('/reserva',authenticate, reservaRoutes);
 app.use('/auth', authRoutes);

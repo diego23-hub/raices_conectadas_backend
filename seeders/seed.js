@@ -43,6 +43,7 @@ const sembrar = async () => {
   const permisosAdmin = [
     ...entidades.flatMap((e) => ['crear', 'editar', 'eliminar'].map((accion) => `${e}:${accion}`)),
     'usuario:listar', 'usuario:consultar', 'usuario:editar', 'usuario:eliminar',
+    'rol:consultar',
     'reserva:listar'
   ];
   const permisosViajero = [

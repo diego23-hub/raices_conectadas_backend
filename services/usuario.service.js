@@ -1,4 +1,5 @@
 const { usuario: Usuario, rol } = require('../models');
+const 
 
 exports.register = async (data) => {
     const { idRol, ...datosSeguros } = data;   // ignora el rol que mande el cliente
@@ -8,19 +9,6 @@ exports.register = async (data) => {
     return sinClave;
 };
 
-exports.login = async (correo, contrasena) => {
-    const user = await Usuario.findOne({ where: { correo } });
-
-    if (!user) throw new Error('Usuario no existe');
-
-    const valid = await bcrypt.compare(contrasena, user.contrasena);
-
-    if (!valid) throw new Error('Credenciales inválidas');
-
-    const token = jwtUtil.generarToken(user);
-
-    return { user, token };
-};
 exports.getAll = async () => {
     return await Usuario.findAll({ attributes: { exclude: ['contrasena'] } });
 };

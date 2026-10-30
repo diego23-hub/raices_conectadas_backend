@@ -1,10 +1,11 @@
 const express= require('express');
 const router=express.Router();
 const reservaController=require('../controllers/reserva.controller');
-const authorize=require('../middlewares/authorize')
-router.get('/', authorize("Listar reserva"), reservaController.getAll);
-router.get('/:id', authorize("ConsultarreservaByID"),reservaController.getById);
-router.post('/', reservaController.create);
-router.put('/:id', reservaController.update);
-router.delete('/:id', reservaController.delete);
+const authorize=require('../middlewares/authorize');
+
+router.get('/mis', authorize('reserva:consultar'),reservaController.getMine);
+router.get('/', authorize('reserva:listar'), reservaController.getAll);
+router.post('/', authorize('reserva:crear'),reservaController.create);
+router.put('/:id', authorize('reserva:editar'),reservaController.update);
+router.delete('/:id', authorize('reserva:cancelar'),reservaController.cancel);
 module.exports=router;
