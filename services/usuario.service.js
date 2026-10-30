@@ -1,5 +1,4 @@
-const { usuario: Usuario, rol } = require('../models');
-const 
+const { usuario: Usuario, rol } = require('../models'); 
 
 exports.register = async (data) => {
     const { idRol, ...datosSeguros } = data;   // ignora el rol que mande el cliente

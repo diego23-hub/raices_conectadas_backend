@@ -29,4 +29,14 @@ exports.delete = async (id) => {
     }
     await reserva.destroy();
     return {message: 'Reserva eliminado correctamente'};
-}
+};
+
+exports.getMine = (idUsuario) => Reserva.findAll({ where: { idUsuario } });
+
+exports.cancel = async (id, idUsuario) => {
+  const reserva = await Reserva.findByPk(id);
+  if (!reserva || reserva.idUsuario !== idUsuario) throw new Error('Reserva no encontrado');
+  if (reserva.estado !== 'Pendiente') throw new BusinessError('Solo se pueden cancelar reservas pendientes');
+  await reserva.destroy();
+  return { message: 'Reserva cancelada' };
+};

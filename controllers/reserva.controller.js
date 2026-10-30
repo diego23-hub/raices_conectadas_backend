@@ -56,3 +56,10 @@ exports.delete = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }; 
+
+exports.getMine = async (req, res, next) => {
+  try { res.json(await service.getMine(req.user.id)); } catch (e) { next(e); }
+};
+exports.cancel = async (req, res, next) => {
+  try { res.json(await service.cancel(req.params.id, req.user.id)); } catch (e) { next(e); }
+};
