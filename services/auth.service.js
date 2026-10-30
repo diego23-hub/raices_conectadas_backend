@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { usuario, rol, permiso } = require('../models');
 const BusinessError = require("../errors/BusinessError");
-const UnauthorizedError=requrie("../errors/UnauthorizedError");
+const UnauthorizedError=require("../errors/UnauthorizedError");
 const { generateToken } = require('../utils/jwt.util');
 
 const credencialesInvalidas = () => {
@@ -15,7 +15,7 @@ const login = async ({ correo, contrasena }) => {
     if (!user) throw credencialesInvalidas();
 
     const valida = await bcrypt.compare(contrasena, user.contrasena);
-    if (!valida) throw UnauthorizedError("Credenciales Inválidas");
+    if (!valida) throw new UnauthorizedError("Credenciales Inválidas");
 
     const permisos = await permiso.findAll({
         include: { model: rol, where: { id: user.idRol }, attributes: [], through: { attributes: [] } }

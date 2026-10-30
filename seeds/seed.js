@@ -68,7 +68,6 @@ const sembrar = async () => {
     precio: p.precio,
     descripcion: p.descripcion,
     duracion: p.duracion,
-    duracionDias: p.duracionDias ?? parseInt(p.duracion),
     incluye: p.incluye,
     itinerario: p.itinerario,
     limitePersonas: p.limitePersonas,

@@ -10,11 +10,6 @@ const authrorize = (requiredPermission)=>{
         if (!permisos.includes(requiredPermission)) {
             return res.status(403).json({ message: "No tiene permisos para realizar esta acción" });
         }
-        if (!tienePermiso){
-            return res.status(403).json({
-                message: "No tiene permisos para realizar esta acción"
-            });
-        }
         /*
         if (!permiso.includes(requiredPermission)){
             return res.status(403).json({
