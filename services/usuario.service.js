@@ -1,7 +1,8 @@
-const { usuario: Usuario, rol } = require('../models');
+const { usuario: Usuario, rol, tipoDoc: TipoDoc } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const SystemError = require('../errors/SystemError');
+const { idPorNombre } = require('../utils/tipos');
 
 const handleError = (error, defaultMessage) => {
     if (error instanceof BusinessError || error instanceof SystemError) {
@@ -13,31 +14,19 @@ const handleError = (error, defaultMessage) => {
 
 exports.register = async (data) => {
     try {
-        const { idRol, ...datosSeguros } = data;   // ignora el rol que mande el cliente
+        const { idRol, tipoDoc, ...datos } = data;
+
+        if (await Usuario.findOne({ where: { correo: datos.correo } })) {
+            throw new BusinessError('Ese correo ya está registrado');
+        }
+
+        const idTipoDoc = await idPorNombre(TipoDoc, tipoDoc, 'Tipo de documento');
         const rolViajero = await rol.findOne({ where: { nombre: 'viajero' } });
-        const creado = await Usuario.create({ ...datosSeguros, idRol: rolViajero.id });
+        const creado = await Usuario.create({ ...datos, idTipoDoc, idRol: rolViajero.id });
         const { contrasena, ...sinClave } = creado.toJSON();
         return sinClave;
     } catch (error) {
         handleError(error, 'Error al registrar el usuario');
-    }
-};
-
-exports.login = async (correo, contrasena) => {
-    try {
-        const user = await Usuario.findOne({ where: { correo } });
-
-        if (!user) throw new UnauthorizedError('Usuario no existe');
-
-        const valid = await bcrypt.compare(contrasena, user.contrasena);
-
-        if (!valid) throw new UnauthorizedError('Credenciales inválidas');
-
-        const token = jwtUtil.generarToken(user);
-
-        return { user, token };
-    } catch (error) {
-        handleError(error, 'Error al iniciar sesión');
     }
 };
 

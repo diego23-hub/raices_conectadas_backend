@@ -1,6 +1,7 @@
 const logger =require('../utils/logger');
 const BusinessError = require("../errors/BusinessError");
 const SystemError=require("../errors/SystemError");
+const UnauthorizedError=require("../errors/UnauthorizedError");
 
 const handleError = (err,req,res,next)=>{
 
@@ -18,6 +19,16 @@ const handleError = (err,req,res,next)=>{
     if(err instanceof SystemError){
 
         logger.error(err.message);
+
+        return res.status(err.statusCode).json({
+            success:false,
+            message: err.message,
+        });
+    }
+
+    if(err instanceof UnauthorizedError){
+
+        logger.warn(err.message);
 
         return res.status(err.statusCode).json({
             success:false,

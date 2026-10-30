@@ -9,6 +9,15 @@ const handleError = (error, defaultMessage) => {
     console.error(error); // útil para depurar el error original
     throw new SystemError(defaultMessage);
 };
+
+exports.getMine = async (idUsuario) => {
+    try{
+        return await Reserva.findAll({ where: { idUsuario } })
+    } catch (error) {
+        handleError(error, 'Error consultando las reservas');
+    }
+};
+
 exports.create = async (data) => {
     try {
         return await Reserva.create(data);
@@ -45,13 +54,15 @@ exports.update = async (id, data) => {
     }
 };
 
-exports.delete = async (id) => {
+exports.cancel = async (id, idUsuario) => {
     try {
         const reserva = await Reserva.findByPk(id);
-        if (!reserva) throw new BusinessError('Reserva no encontrada');
+        if (!reserva || reserva.idUsuario !== idUsuario){
+             throw new BusinessError('Reserva no encontrada');
+        }
         await reserva.destroy();
-        return { message: 'Reserva eliminada correctamente' };
+        return { message: 'Reserva cancelada correctamente' };
     } catch (error) {
-        handleError(error, 'Error al eliminar la reserva');
+        handleError(error, 'Error al cancelar la reserva');
     }
 };

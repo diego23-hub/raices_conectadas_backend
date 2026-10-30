@@ -1,32 +1,69 @@
 const Evento = require ('../models/evento.model');
+const { idPorNombre } = require('../utils/tipos');
+const { tipoEvento: TipoEvento } = require('../models');
+const BusinessError = require('../errors/BusinessError');
+const SystemError=require('../errors/SystemError');
+
+const handleError = (error, defaultMessage) => {
+    if (error instanceof BusinessError || error instanceof SystemError) {
+        throw error;
+    }
+    console.error(error); // útil para depurar el error original
+    throw new SystemError(defaultMessage);
+};
 
 exports.create = async (data) => {
-    return await Evento.create(data);
+    try {
+        const { tipoEvento, ...resto } = data;
+        const idTipoEvento = await idPorNombre(TipoEvento, tipoEvento, 'Tipo de evento');
+        return await Evento.create({ ...resto, idTipoEvento });
+    } catch (error){
+        handleError(error, 'Error al crear el evento');
+    }
 };
 
 exports.getAll = async () => {
-    return await Evento.findAll();
+    try {
+        return await Evento.findAll();
+    } catch(error){
+        handleError(error, 'Error al obtener los eventos');
+    }
 };
 
 exports.getById = async (id) => {
-    const evento = await Evento.findByPk(id)
-    if (!evento) throw new Error('Evento no encontrado');
-    return evento;
-}
+    try{
+        const evento = await Evento.findByPk(id)
+        if (!evento) throw new BusinessError('Evento no encontrado');
+        return evento;
+    }catch(error){
+        handleError(error, 'Error al obtener el evento');
+    }
+};
 
 exports.update = async (id,data) => {
-    const evento = await Evento.findByPk(id);
-    if (!evento) {
-        throw new Error('Evento no encontrado');
-    }
-    return await evento.update(data);
+    try{
+        const evento = await Evento.findByPk(id);
+        if (!evento) throw new BusinessError('Evento no encontrado');
+
+        const { tipoEvento, ...resto } = data;
+        if (tipoEvento !== undefined) {
+            resto.idTipoEvento = await idPorNombre(TipoEvento, tipoEvento, 'Tipo de evento');
+        }
+        return await evento.update(resto);
+        }catch(error){
+            handleError(error,'Error al actualizar el evento');
+        }
 };
 
 exports.delete = async (id) => {
-    const evento = await Evento.findByPk(id);
-    if(!evento){
-        throw new Error('Evento no encontrado');
+    try{
+        const evento = await Evento.findByPk(id);
+        if(!evento){
+            throw new BusinessError('Evento no encontrado');
+        }
+        await evento.destroy();
+        return {message: 'Evento eliminado correctamente'};
+    }catch(error){
+        handleError(error,'Error al eliminar el evento')
     }
-    await evento.destroy();
-    return {message: 'Evento eliminado correctamente'};
-}
+};

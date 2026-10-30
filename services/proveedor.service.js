@@ -1,32 +1,72 @@
+const { idPorNombre } = require('../utils/tipos');
+const { tipoProveedor: TipoProveedor } = require('../models');
+const BusinessError = require('../errors/BusinessError');
+const SystemError=require('../errors/SystemError');
 const Proveedor = require ('../models/proveedor.model');
 
+const handleError = (error, defaultMessage) => {
+    if (error instanceof BusinessError || error instanceof SystemError) {
+        throw error;
+    }
+    console.error(error); // útil para depurar el error original
+    throw new SystemError(defaultMessage);
+};
+
 exports.create = async (data) => {
-    return await Proveedor.create(data);
+    try{
+        const { tipo, lugar, ...resto } = data;
+        const idTipoProveedor = await idPorNombre(TipoProveedor, tipo, 'Tipo de proveedor');
+        return await Proveedor.create({ ...resto, ubicacion:lugar ?? resto.ubicacion, idTipoProveedor });
+    }catch(error){
+        handleError(error, 'Error creando el proveedor');
+    }
 };
 
 exports.getAll = async () => {
-    return await Proveedor.findAll();
+    try{
+        return await Proveedor.findAll();
+    }catch(error){
+        handleError(error,'Error obteniendo los proveedores');
+    }
 };
 
 exports.getById = async (id) => {
-    const proveedor = await Proveedor.findByPk(id)
-    if (!proveedor) throw new Error('Proveedor no encontrado');
-    return proveedor;
-}
+    try{
+        const proveedor = await Proveedor.findByPk(id)
+        if (!proveedor) throw new BusinessError('Proveedor no encontrado');
+        return proveedor;
+    }catch(error){
+        handleError(error,'Error obteniendo el proveedor');
+    }
+};
 
 exports.update = async (id,data) => {
-    const proveedor = await Proveedor.findByPk(id);
-    if (!proveedor) {
-        throw new Error('Proveedor no encontrado');
+    try{
+        const proveedor = await Proveedor.findByPk(id);
+        if (!proveedor) {
+            throw new BusinessError('Proveedor no encontrado');
+        }
+        const { tipo, lugar, ...resto } = data;
+        if (lugar !== undefined) resto.ubicacion = lugar;
+        if (tipo !== undefined) {
+            resto.idTipoProveedor = await idPorNombre(TipoProveedor, tipo, 'Tipo de proveedor');
+        }
+        return await proveedor.update(resto);
+
+    }catch(error){
+        handleError(error, 'Error al actualizar el proveedor');
     }
-    return await proveedor.update(data);
 };
 
 exports.delete = async (id) => {
-    const proveedor = await Proveedor.findByPk(id);
-    if(!proveedor){
-        throw new Error('Proveedor no encontrado');
+    try{
+        const proveedor = await Proveedor.findByPk(id);
+        if(!proveedor){
+            throw new BusinessError('Proveedor no encontrado');
+        }
+        await proveedor.destroy();
+        return {message: 'Proveedor eliminado correctamente'};
+    }catch(error){
+        handleError(error, 'Error al eliminar el proveedor');
     }
-    await proveedor.destroy();
-    return {message: 'Proveedor eliminado correctamente'};
-}
+};

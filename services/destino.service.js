@@ -1,6 +1,8 @@
 const Destino = require ('../models/destino.model');
 const BusinessError = require('../errors/BusinessError');
 const SystemError = require ('../errors/SystemError');
+const { idPorNombre } = require('../utils/tipos');
+const { tipoDestino: TipoDestino } = require('../models');
 
 // Deja pasar tus errores propios y envuelve cualquier otro como SystemError
 const handleError = (error, defaultMessage) => {
@@ -13,7 +15,11 @@ const handleError = (error, defaultMessage) => {
 
 exports.create = async (data) => {
     try{
-    return await Destino.create(data);
+
+        const { tipo, ...resto } = data;
+        const idTipoDestino = await idPorNombre(TipoDestino, tipo, 'Clasificación');
+        return await Destino.create({ ...resto, idTipoDestino });
+
     } catch (error){
         handleError(error, 'Error al crear el destino');
     }
@@ -21,27 +27,29 @@ exports.create = async (data) => {
 
 exports.getAll = async () => {
     try {
-    return await Destino.findAll();
+        return await Destino.findAll();
     } catch (error) {
-        handleError (error, 'Error al obtener los detinos');
+        handleError (error, 'Error al obtener los destinos');
     }
 };
 
 exports.getById = async (id) => {
     try {
-    const destino = await Destino.findByPk(id)
-    if (!destino) throw new Error('Destino no encontrado');
-    return destino; 
+        const destino = await Destino.findByPk(id)
+        if (!destino) throw new BusinessError('Destino no encontrado');
+        return destino; 
     } catch (error) {
         handleError(error, 'Error al obtener el destino');
     }
-}
+};
 
 exports.update = async (id,data) => {
     try{
-    const destino = await Destino.findByPk(id);
-    if (!destino) throw new BusinessError('Destino no encontrado');
-    return await destino.update(data);
+        const destino = await Destino.findByPk(id);
+        const { tipo, ...resto } = data;
+        if (!destino) throw new BusinessError('Destino no encontrado');
+        if (tipo !== undefined) resto.idTipoDestino = await idPorNombre(TipoDestino, tipo, 'Clasificación');
+        return await destino.update(resto);
     } catch (error){
         handleError(error, 'Error al actualizar el destino');
     }
@@ -49,12 +57,12 @@ exports.update = async (id,data) => {
 
 exports.delete = async (id) => {
     try {
-    const destino = await Destino.findByPk(id);
-    if(!destino)
-    throw new BusinessError('Destino no encontrado');
-    await destino.destroy();
-    return {message: 'Destino eliminado correctamente'};
+        const destino = await Destino.findByPk(id);
+        if(!destino)
+        throw new BusinessError('Destino no encontrado');
+        await destino.destroy();
+        return {message: 'Destino eliminado correctamente'};
     }catch (error) {
         handleError (error, 'Error al eliminar destino')
     }
-}
+};
