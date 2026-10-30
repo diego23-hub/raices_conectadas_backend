@@ -1,8 +1,8 @@
 const express= require('express');
 const router=express.Router();
 const usuarioController=require('../controllers/usuario.controller');
-const authenticate = require('../middlewares/auth');
-const authorize = require('../middlewares/auth');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
 
 router.get('/', authenticate, authorize('usuario:listar'), usuarioController.getAll);
 router.get('/:id', authenticate, authorize('usuario:consultar'), usuarioController.getById);
