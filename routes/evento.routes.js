@@ -1,10 +1,12 @@
 const express= require('express');
 const router=express.Router();
 const eventoController=require('../controllers/evento.controller');
-const authorize=require('../middlewares/authorize')
-router.get('/', authorize("Listar evento"), eventoController.getAll);
-router.get('/:id', authorize("ConsultareventoByID"),eventoController.getById);
-router.post('/', eventoController.create);
-router.put('/:id', eventoController.update);
-router.delete('/:id', eventoController.delete);
+const authorize=require('../middlewares/authorize');
+const authenticate=require('../middlewares/authenticate');
+
+router.get('/', eventoController.getAll);
+router.get('/:id', eventoController.getById);
+router.post('/', authenticate, authorize('evento:crear'),eventoController.create);
+router.put('/:id', authenticate,authorize('evento:editar'),eventoController.update);
+router.delete('/:id', authenticate,authorize('evento:eliminar'),eventoController.delete);
 module.exports=router;

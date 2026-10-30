@@ -21,7 +21,7 @@ const paquete = sequelize.define(
             allowNull: false
         },
         duracion:{
-            type: DataTypes.DATE,
+            type: DataTypes.STRING,
             allowNull:false
         },
         incluye:{

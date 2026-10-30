@@ -27,7 +27,7 @@ const rolRoutes=require("./routes/rol.routes");
 app.use('/usuario', usuarioRoutes);
 app.use('/destino', destinoRoutes);
 app.use('/evento', eventoRoutes);
-app.use('/paquete', authenticate,paqueteRoutes);
+app.use('/paquete',paqueteRoutes);
 app.use('/proveedor', proveedorRoutes);
 app.use('/reserva',authenticate, reservaRoutes);
 app.use('/auth', authRoutes);
