@@ -8,4 +8,5 @@ router.get('/', authorize('reserva:listar'), reservaController.getAll);
 router.post('/', authorize('reserva:crear'),reservaController.create);
 router.put('/:id', authorize('reserva:editar'),reservaController.update);
 router.delete('/:id', authorize('reserva:cancelar'),reservaController.cancel);
+router.post('/:id/pagar', authorize('pago:procesar'), reservaController.pagar);
 module.exports=router;

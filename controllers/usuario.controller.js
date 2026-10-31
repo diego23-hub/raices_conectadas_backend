@@ -9,16 +9,6 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
-try {
-        const { correo, contrasena } = req.body;
-        const data = await service.login(correo, contrasena);
-        res.json(data);
-    } catch (err) {
-        res.status(401).json({ error: err.message });
-    }
-};
-
 exports.getAll= async(req,res)=>{
     try{
         const usuarios=await service.getAll();

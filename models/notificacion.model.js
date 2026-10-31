@@ -22,7 +22,8 @@ const notificacion = sequelize.define(
         },
         fechaCreacion:{
             type:DataTypes.DATE,
-            allowNull:false
+            allowNull:false,
+            defaultValue: NOW
         }
     },
     {

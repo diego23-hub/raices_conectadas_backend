@@ -17,11 +17,11 @@ const reserva = sequelize.define(
             allowNull: false
         },
         fechaInicio: {
-            type:DataTypes.DATE,
+            type:DataTypes.DATEONLY,
             allowNull: false
         },
         fechaFinal:{
-            type:DataTypes.DATE,
+            type:DataTypes.DATEONLY,
             allowNull: false
         },
         cantidadPersonas: {

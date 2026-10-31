@@ -26,25 +26,34 @@ exports.getById = async (req, res) => {
     }
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
     try {
-        const reserva = await service.create(req.body);
+        const { idPaquete, fechaInicio, fechaFinal, detalleEdades = {} } = req.body;
+        const reserva = await service.create(req.user.id, {
+            idPaquete, fechaInicio, fechaFinal, ...detalleEdades
+        });
         res.status(201).json(reserva);
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        next(err);
     }
 };
 
-exports.update = async (req, res) => {
+exports.update = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const updateReserva = await service.update(id, req.body);
-        res.status(200).json(updateReserva);
+        const { fechaInicio, fechaFinal, detalleEdades = {} } = req.body;
+        res.json(await service.update(req.params.id, req.user.id, {
+            fechaInicio, fechaFinal, ...detalleEdades
+        }));
     } catch (err) {
-        if (err.message === 'Reserva no encontrado') {
-            return res.status(404).json({ error: err.message });
-        }
-        res.status(400).json({ error: err.message });
+        next(err);
+    }
+};
+
+exports.pagar = async (req, res, next) => {
+    try {
+        res.json(await service.pagar(req.params.id, req.user.id, req.body.metodo));
+    } catch (err) {
+        next(err);
     }
 };
 

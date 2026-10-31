@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const {
   sequelize, usuario, destino, evento, paquete, proveedor,
-  tipoDestino, tipoEvento, tipoDoc, tipoProveedor, rol, permiso, rolPermiso
+  tipoDestino, tipoEvento, tipoDoc, tipoProveedor, rol, permiso, rolPermiso, metodoPago
 } = require('../models');
 
 const datos = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json'), 'utf8'));
@@ -69,6 +69,7 @@ const sembrar = async () => {
     precio: p.precio,
     descripcion: p.descripcion,
     duracion: p.duracion,
+    duracionDias: p.duracionDias ?? parseInt(p.duracion),
     incluye: p.incluye,
     itinerario: p.itinerario,
     limitePersonas: p.limitePersonas,
@@ -95,6 +96,8 @@ const sembrar = async () => {
     idDestino: e.idDestino,
     idTipoEvento: tiposEvento[normalizarEvento(e.tipoEvento)]
   })));
+
+  await metodoPago.bulkCreate([{ nombre: 'Tarjeta' }, { nombre: 'PSE' }, { nombre: 'Nequi' }]);
 
   await usuario.bulkCreate(datos.viajeros.map((v) => ({
     idTipoDoc: tiposDoc[v.tipoDoc],
