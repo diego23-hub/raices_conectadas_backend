@@ -1,6 +1,5 @@
 const { usuario: Usuario, rol, tipoDoc: TipoDoc } = require('../models');
 const BusinessError = require('../errors/BusinessError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 const SystemError = require('../errors/SystemError');
 const { idPorNombre } = require('../utils/tipos');
 
@@ -40,7 +39,9 @@ exports.getAll = async () => {
 
 exports.getById = async (id) => {
     try {
-        return await Usuario.findByPk(id, { attributes: { exclude: ['contrasena'] } });
+        const usuario = await Usuario.findByPk(id, { attributes: { exclude: ['contrasena'] } });
+        if (!usuario) throw new BusinessError('Usuario no encontrado', 404);
+        return usuario;
     } catch (error) {
         handleError(error, 'Error al obtener el usuario');
     }
@@ -49,8 +50,15 @@ exports.getById = async (id) => {
 exports.update = async (id, data) => {
     try {
         const usuario = await Usuario.findByPk(id);
-        if (!usuario) throw new BusinessError('Usuario no encontrado');
-        return await usuario.update(data);
+        if (!usuario) throw new BusinessError('Usuario no encontrado', 404);
+
+        const { tipoDoc, ...cambios } = data;
+        if (tipoDoc !== undefined) {
+            cambios.idTipoDoc = await idPorNombre(TipoDoc, tipoDoc, 'Tipo de documento');
+        }
+        const actualizado = await usuario.update(cambios);
+        const { contrasena, ...sinClave } = actualizado.toJSON();
+        return sinClave;
     } catch (error) {
         handleError(error, 'Error al actualizar el usuario');
     }

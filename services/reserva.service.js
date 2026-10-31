@@ -143,22 +143,21 @@ exports.cancel = async (id, idUsuario) => {
     }
 };
 
-// ---------- Pago simulado + notificaciones (RF006) ----------
 exports.pagar = async (id, idUsuario, metodo) => {
     try {
-        return await sequelize.transaction(async (t) => {
+        const aprobado = await sequelize.transaction(async (t) => {
             const reserva = await Reserva.findByPk(id, { transaction: t, lock: t.LOCK.UPDATE });
             if (!reserva || reserva.idUsuario !== idUsuario) {
-                throw new BusinessError('Reserva no encontrada');
+                throw new BusinessError('Reserva no encontrada', 404);
             }
             if (reserva.estado !== 'pendiente') {
-                throw new BusinessError('La reserva ya no está pendiente');
+                throw new BusinessError('La reserva ya no está pendiente', 409);
             }
 
             const idMetodoPago = await idPorNombre(MetodoPago, metodo, 'Método de pago');
             const aprobado = Math.random() < 0.8; // simulación: 8 de cada 10 se aprueban
 
-            const pago = await Pago.create({
+            await Pago.create({
                 idReserva: reserva.id,
                 idMetodoPago,
                 referencia: `${aprobado ? 'SIM' : 'RECH'}-${Date.now()}`,
@@ -186,8 +185,12 @@ exports.pagar = async (id, idUsuario, metodo) => {
                 );
             }
 
-            return { aprobado, reserva, pago };
+            return aprobado;   // la transacción se confirma en ambos casos: el pago rechazado queda registrado
         });
+
+        if (!aprobado) throw new BusinessError('Pago rechazado', 402);
+
+        return await Reserva.findByPk(id);   // devuelve la reserva, ya "pagada"
     } catch (error) {
         handleError(error, 'Error al procesar el pago');
     }

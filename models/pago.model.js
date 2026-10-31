@@ -21,11 +21,12 @@ const pago = sequelize.define(
             allowNull: false
         },
         monto:{
-            type: DataTypes.DECIMAL,
-            allowNull: false
+            type: DataTypes.DECIMAL(12, 2),
+            allowNull: false,
+            get() { return Number(this.getDataValue('monto')); }
         },
         fecha:{
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE,
             allowNull: false
         },
         estado:{

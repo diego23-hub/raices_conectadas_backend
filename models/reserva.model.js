@@ -28,17 +28,20 @@ const reserva = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        subtotal:{
-            type: DataTypes.DECIMAL,
-            allowNull: false
+        subtotal: {
+            type: DataTypes.DECIMAL(12, 2),
+            allowNull: false,
+            get() { return Number(this.getDataValue('subtotal')); }
         },
         iva:{
-            type: DataTypes.DECIMAL,
-            allowNull: false
+            type: DataTypes.DECIMAL(12, 2),
+            allowNull: false,
+            get() { return Number(this.getDataValue('iva')); }
         },
         total: {
-            type:DataTypes.DECIMAL,
-            allowNull: false
+            type:DataTypes.DECIMAL(12, 2),
+            allowNull: false,
+            get() { return Number(this.getDataValue('total')); }
         },
         adultos:{
             type:DataTypes.INTEGER,

@@ -17,11 +17,11 @@ const evento = sequelize.define(
             allowNull: false
         },
         fechaInicio:{
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         fechaFin:{
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         idDestino:{

@@ -4,27 +4,14 @@ exports.getMine = async (req, res, next) => {
   try { res.json(await service.getMine(req.user.id)); } catch (e) { next(e); }
 };
 
-exports.getAll = async (req, res) => {
+exports.getAll = async (req, res, next) => {
     try {
-        const reserva = await service.getAll();
-        res.status(200).json(reserva);
+        res.status(200).json(await service.getAll());
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        next(err);
     }
 };
 
-exports.getById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const reserva = await service.getById(id);
-        res.status(200).json(reserva);
-    } catch (err) {
-        if (err.message === 'Reserva no encontrado') {
-            return res.status(404).json({ error: err.message });
-        }
-        res.status(500).json({ error: err.message });
-    }
-};
 
 exports.create = async (req, res, next) => {
     try {

@@ -13,8 +13,9 @@ const paquete = sequelize.define(
             allowNull: false
         },
         precio:{
-            type: DataTypes.DECIMAL,
-            allowNull: false
+            type: DataTypes.DECIMAL(12, 2),
+            allowNull: false,
+            get() { return Number(this.getDataValue('precio')); }
         },
         descripcion:{
             type: DataTypes.TEXT,
