@@ -1,6 +1,6 @@
 const Evento = require ('../models/evento.model');
 const { idPorNombre } = require('../utils/tipos');
-const { tipoEvento: TipoEvento } = require('../models');
+const { tipoEvento: TipoEvento, tipoEvento } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const SystemError=require('../errors/SystemError');
 
@@ -12,11 +12,19 @@ const handleError = (error, defaultMessage) => {
     throw new SystemError(defaultMessage);
 };
 
+const conTipo = async (eventos) => {
+    const tipos = Object.fromEntries(
+        (await tipoEvento.findAll()).map((t) => [t.id, t.nombre])
+    );
+    return eventos.map((d) => ({ ...d.toJSON(), tipoEvento: tipos[d.idTipoEvento] }));
+};
+
 exports.create = async (data) => {
     try {
         const { tipoEvento, ...resto } = data;
         const idTipoEvento = await idPorNombre(TipoEvento, tipoEvento, 'Tipo de evento');
-        return await Evento.create({ ...resto, idTipoEvento });
+        const creado = await Evento.create({ ...resto, idTipoEvento });
+        return (await conTipo([creado]))[0];    
     } catch (error){
         handleError(error, 'Error al crear el evento');
     }
@@ -24,7 +32,7 @@ exports.create = async (data) => {
 
 exports.getAll = async () => {
     try {
-        return await Evento.findAll();
+        return await conTipo(await Evento.findAll());
     } catch(error){
         handleError(error, 'Error al obtener los eventos');
     }
@@ -34,7 +42,7 @@ exports.getById = async (id) => {
     try{
         const evento = await Evento.findByPk(id)
         if (!evento) throw new BusinessError('Evento no encontrado');
-        return evento;
+        return (await conTipo([evento]))[0]; 
     }catch(error){
         handleError(error, 'Error al obtener el evento');
     }
@@ -49,7 +57,7 @@ exports.update = async (id,data) => {
         if (tipoEvento !== undefined) {
             resto.idTipoEvento = await idPorNombre(TipoEvento, tipoEvento, 'Tipo de evento');
         }
-        return await evento.update(resto);
+        return (await conTipo([await evento.update(resto)]))[0];
         }catch(error){
             handleError(error,'Error al actualizar el evento');
         }
