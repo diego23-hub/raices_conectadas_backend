@@ -5,3 +5,4 @@ class BusinessError extends Error {
         this.statusCode = statusCode;
     }
 }
+module.exports = BusinessError;
