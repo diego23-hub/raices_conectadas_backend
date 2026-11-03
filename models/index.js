@@ -126,6 +126,20 @@ permiso.belongsToMany(rol,{
     otherKey: "idRol"
 });
 
+rolPermiso.belongsTo(permiso, {
+    foreignKey: "idPermiso"
+});
+permiso.hasMany(rolPermiso, {
+    foreignKey: "idPermiso"
+});
+
+rolPermiso.belongsTo(rol, {
+    foreignKey: "idRol"
+});
+rol.hasMany(rolPermiso, {
+    foreignKey: "idRol"
+});
+
 module.exports={
     sequelize,
     usuario,

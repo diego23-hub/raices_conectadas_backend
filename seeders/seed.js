@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt'); 
 const {
   sequelize, usuario, destino, evento, paquete, proveedor,
   tipoDestino, tipoEvento, tipoDoc, tipoProveedor, rol, permiso, rolPermiso, metodoPago
@@ -99,16 +100,16 @@ const sembrar = async () => {
 
   await metodoPago.bulkCreate([{ nombre: 'Tarjeta' }, { nombre: 'PSE' }, { nombre: 'Nequi' }]);
 
-  await usuario.bulkCreate(datos.viajeros.map((v) => ({
-    idTipoDoc: tiposDoc[v.tipoDoc],
-    numDoc: v.numDoc,
-    nombres: v.nombres,
-    apellidos: v.apellidos,
-    telefono: v.telefono,
-    correo: v.correo,
-    contrasena: v.contrasena,
-    idRol: roles[v.rol]
-  })), { individualHooks: true });
+  await usuario.create({
+      idTipoDoc: tiposDoc['CC'],
+      numDoc: '1000000000',
+      nombres: 'Administrador',
+      apellidos: 'Principal',
+      telefono: '3000000000',
+      correo: 'admin@correo.com',
+      contrasena: 'Admin123*', 
+      idRol: roles.admin
+  });
 
   console.log('Tablas creadas y datos cargados');
 };

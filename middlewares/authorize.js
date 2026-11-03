@@ -6,6 +6,9 @@ const authrorize = (requiredPermission)=>{
             });
         }
 
+        console.log("MIDDLEWARE - Permisos del usuario en req.user:", req.user.permisos);
+        console.log("MIDDLEWARE - Permiso que exige la ruta:", requiredPermission);
+
         const permisos = req.user.permisos || [];
         if (!permisos.includes(requiredPermission)) {
             return res.status(403).json({ message: "No tiene permisos para realizar esta acción" });
