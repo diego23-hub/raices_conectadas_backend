@@ -1,8 +1,8 @@
 const { idPorNombre } = require('../utils/tipos');
-const { tipoProveedor: TipoProveedor, proveedor } = require('../models');
+const { tipoProveedor: TipoProveedor } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const SystemError=require('../errors/SystemError');
-const Proveedor = require ('../models/proveedor.model');
+const Proveedor = require('../models/proveedor.model');
 
 const handleError = (error, defaultMessage) => {
     if (error instanceof BusinessError || error instanceof SystemError) {
@@ -12,7 +12,7 @@ const handleError = (error, defaultMessage) => {
     throw new SystemError(defaultMessage);
 };
 
-const conTipo = async (destinos) => {
+const conTipo = async (proveedor) => {
     const tipos = Object.fromEntries(
         (await TipoProveedor.findAll()).map((t) => [t.id, t.nombre])
     );
@@ -23,8 +23,7 @@ exports.create = async (data) => {
     try{
         const { tipo, lugar, ...resto } = data;
         const idTipoProveedor = await idPorNombre(TipoProveedor, tipo, 'Tipo de proveedor');
-        const creado = await Destino.create({ ...resto, idTipoDestino });
-        return await Proveedor.create({ ...resto, ubicacion:lugar ?? resto.ubicacion, idTipoProveedor });
+        const creado = await Proveedor.create({ ...resto, ubicacion:lugar ?? resto.ubicacion, idTipoProveedor });
         return (await conTipo([creado]))[0];
     }catch(error){
         handleError(error, 'Error creando el proveedor');
