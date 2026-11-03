@@ -1,5 +1,6 @@
 const Paquete = require('../models/paquete.model');
 const BusinessError = require('../errors/BusinessError');
+const SystemError = require('../errors/SystemError');
 
 const handleError = (error, defaultMessage) => {
     if (error instanceof BusinessError || error instanceof SystemError) {
