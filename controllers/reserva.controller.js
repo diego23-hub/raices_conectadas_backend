@@ -1,4 +1,5 @@
 const service = require('../services/reserva.service');
+const pagoService = require('../services/pago.service');
 
 exports.getMine = async (req, res, next) => {
   try { res.json(await service.getMine(req.user.id)); } catch (e) { next(e); }
@@ -38,7 +39,7 @@ exports.update = async (req, res, next) => {
 
 exports.pagar = async (req, res, next) => {
     try {
-        res.json(await service.pagar(req.params.id, req.user.id, req.body.metodo));
+        res.json(await pagoService.pagar(req.params.id, req.user.id, req.body.metodo));
     } catch (err) {
         next(err);
     }

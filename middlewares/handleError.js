@@ -36,6 +36,14 @@ const handleError = (err,req,res,next)=>{
         });
     }
 
+    if (err.name === 'SequelizeUniqueConstraintError') {
+    logger.warn(err.message);
+    return res.status(409).json({
+        success: false,
+        message: 'Ya existe un registro con esos datos'
+    });
+}
+
     logger.error(err.message);
 
     return res.status(500).json({

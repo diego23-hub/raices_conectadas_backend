@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { usuario, rol, permiso, tipoDoc, rolPermiso } = require('../models');
+const { usuario, rol, permiso, tipoDoc } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const SystemError = require('../errors/SystemError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
@@ -27,12 +27,7 @@ const login = async ({ correo, contrasena }) => {
         const user = await usuario.findOne({ where: { correo } });
         if (!user) throw new UnauthorizedError('Credenciales inválidas');
 
-        console.log("Correo buscado:", correo);
-        console.log("Contraseña que llegó del frontend:", contrasena);
-        console.log("Hash guardado en la BD:", user.contrasena);
-
         const valida = await bcrypt.compare(contrasena, user.contrasena);
-        console.log("¿La contraseña coincidió?", valida);
         if (!valida) throw new UnauthorizedError('Credenciales inválidas');
 
         // Consultamos rol y tipo de documento
@@ -51,7 +46,6 @@ const login = async ({ correo, contrasena }) => {
             ? rolUsuario.permisos.map((p) => p.nombre) 
             : [];
 
-        console.log("LOGÍN - Permisos que van para el token:", permisosNombres);
 
         const token = generateToken({
             id: user.id,

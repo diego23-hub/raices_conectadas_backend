@@ -16,9 +16,10 @@ const pago = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        referencia:{
+        referencia: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         monto:{
             type: DataTypes.DECIMAL(12, 2),
