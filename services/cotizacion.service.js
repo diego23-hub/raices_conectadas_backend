@@ -1,5 +1,6 @@
 const { paquete: Paquete, usuario: Usuario, tipoDoc: TipoDoc } = require('../models');
 const BusinessError = require('../errors/BusinessError');
+const { fecha } = require('../utils/validaciones');
 
 const fechaTexto = (fecha) =>
     fecha instanceof Date ? fecha.toISOString().slice(0, 10) : String(fecha).slice(0, 10);
@@ -17,9 +18,20 @@ const cotizar = async (idUsuario, idPaquete, datos) => {
     const ninos = Number(datos.ninos) || 0;
     const bebes = Number(datos.bebes) || 0;
 
+    const hoyLocal = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    };
+
     if (!fechaInicio || !fechaFinal) {
-        throw new BusinessError('Debe indicar las fechas del viaje');
+    throw new BusinessError('Debe indicar las fechas del viaje');
     }
+    fecha(fechaInicio, 'fechaInicio');
+    fecha(fechaFinal, 'fechaFinal');
+    if (fechaTexto(fechaInicio) < hoyLocal()) {
+        throw new BusinessError('La fecha de inicio no puede estar en el pasado');
+    }
+
     const dias = diasEntre(fechaInicio, fechaFinal);
     if (dias < 1) throw new BusinessError('La fecha de fin no puede ser anterior a la de inicio');
     if (dias > 30) throw new BusinessError('La reserva no puede superar 30 días');
@@ -29,6 +41,10 @@ const cotizar = async (idUsuario, idPaquete, datos) => {
     }
     const cantidadPersonas = adultos + jovenes + ninos + bebes;
     if (cantidadPersonas < 1) throw new BusinessError('Debe haber al menos 1 persona viajando');
+
+    if (adultos < 1) {
+    throw new BusinessError('Debe viajar al menos un adulto');
+    }
 
     const paquete = await Paquete.findByPk(idPaquete);
     if (!paquete) throw new BusinessError('Paquete no encontrado', 404);

@@ -27,9 +27,11 @@ exports.fecha = (valor, nombre, { requerido = true } = {}) => {
         if (requerido) throw new BusinessError(`El campo ${nombre} es obligatorio`);
         return;
     }
-    if (typeof valor !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(valor) || Number.isNaN(Date.parse(valor))) {
-        throw new BusinessError(`El campo ${nombre} no es una fecha válida (AAAA-MM-DD)`);
-    }
+    const invalida = () => new BusinessError(`El campo ${nombre} no es una fecha válida (AAAA-MM-DD)`);
+    if (typeof valor !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) throw invalida();
+    const [a, m, d] = valor.split('-').map(Number);
+    const f = new Date(Date.UTC(a, m - 1, d));
+    if (f.getUTCFullYear() !== a || f.getUTCMonth() !== m - 1 || f.getUTCDate() !== d) throw invalida();
 };
 
 exports.numero = (valor, nombre, { min = 0, max = 1000000000, requerido = true } = {}) => {
