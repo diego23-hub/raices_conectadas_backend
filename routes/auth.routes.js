@@ -11,4 +11,7 @@ const limitarLogin = rateLimit({
 
 router.post('/login', limitarLogin, authController.login);
 
+const authenticate = require('../middlewares/authenticate');
+router.get('/perfil', authenticate, authController.perfil);
+
 module.exports = router;

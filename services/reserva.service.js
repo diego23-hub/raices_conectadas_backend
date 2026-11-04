@@ -2,6 +2,7 @@ const { sequelize, reserva: Reserva, pago: Pago } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const SystemError = require('../errors/SystemError');
 const { cotizar } = require('./cotizacion.service');
+const { aRespuesta, aRespuestaLista } = require('../utils/reservaRespuesta');
 
 const handleError = (error, defaultMessage) => {
     if (error instanceof BusinessError || error instanceof SystemError) {
@@ -13,7 +14,7 @@ const handleError = (error, defaultMessage) => {
 
 exports.getMine = async (idUsuario) => {
     try {
-        return await Reserva.findAll({ where: { idUsuario } });
+        return await aRespuestaLista(await Reserva.findAll({ where: { idUsuario } }));
     } catch (error) {
         handleError(error, 'Error consultando las reservas');
     }
@@ -21,7 +22,7 @@ exports.getMine = async (idUsuario) => {
 
 exports.getAll = async () => {
     try {
-        return await Reserva.findAll();
+        return await aRespuestaLista(await Reserva.findAll());
     } catch (error) {
         handleError(error, 'Error al obtener las reservas');
     }
@@ -30,14 +31,15 @@ exports.getAll = async () => {
 exports.create = async (idUsuario, datos) => {
     try {
         const cotizacion = await cotizar(idUsuario, datos.idPaquete, datos);
-        return await sequelize.transaction(async (t) => {
-            const creada = await Reserva.create(
+        const creada = await sequelize.transaction(async (t) => {
+            const nueva = await Reserva.create(
                 { ...cotizacion, idUsuario, estado: 'pendiente' },
                 { transaction: t }
             );
-            await creada.update({ numSeguimiento: 1000 + creada.id }, { transaction: t });
-            return creada;
+            await nueva.update({ numSeguimiento: 1000 + nueva.id }, { transaction: t });
+            return nueva;
         });
+        return await aRespuesta(creada);
     } catch (error) {
         handleError(error, 'Error al crear la reserva');
     }
@@ -61,7 +63,7 @@ exports.update = async (id, idUsuario, datos) => {
             ninos: datos.ninos ?? reserva.ninos,
             bebes: datos.bebes ?? reserva.bebes
         });
-        return await reserva.update(cambios);
+        return await aRespuesta(await reserva.update(cambios));
     } catch (error) {
         handleError(error, 'Error al actualizar la reserva');
     }

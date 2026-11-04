@@ -6,6 +6,7 @@ const {
 const BusinessError = require('../errors/BusinessError');
 const SystemError = require('../errors/SystemError');
 const { idPorNombre } = require('../utils/tipos');
+const { aRespuesta } = require('../utils/reservaRespuesta');
 
 const handleError = (error, defaultMessage) => {
     if (error instanceof BusinessError || error instanceof SystemError) {
@@ -67,7 +68,7 @@ exports.pagar = async (id, idUsuario, metodo) => {
 
         if (!fueAprobado) throw new BusinessError('Pago rechazado', 402);
 
-        return await Reserva.findByPk(id);
+        return await aRespuesta(await Reserva.findByPk(id));
     } catch (error) {
         handleError(error, 'Error al procesar el pago');
     }

@@ -69,4 +69,16 @@ const login = async ({ correo, contrasena }) => {
     }
 };
 
-module.exports = { login };
+const perfil = async (idUsuario) => {
+    try {
+        const user = await usuario.findByPk(idUsuario, { attributes: { exclude: ['contrasena'] } });
+        if (!user) throw new UnauthorizedError('Sesión inválida');
+        const rolUsuario = await rol.findByPk(user.idRol);
+        const tipo = await tipoDoc.findByPk(user.idTipoDoc);
+        return { ...user.toJSON(), rol: rolUsuario?.nombre ?? null, tipoDoc: tipo?.nombre ?? null };
+    } catch (error) {
+        handleError(error, 'Error al obtener el perfil');
+    }
+};
+
+module.exports = { login, perfil };
