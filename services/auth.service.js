@@ -42,9 +42,7 @@ const login = async ({ correo, contrasena }) => {
         const tipo = await tipoDoc.findByPk(user.idTipoDoc);
 
         // Extraemos los nombres de los permisos directamente del rol encontrado
-        const permisosNombres = rolUsuario && rolUsuario.permisos 
-            ? rolUsuario.permisos.map((p) => p.nombre) 
-            : [];
+        const permisosNombres = (rolUsuario?.Permisos || []).map((p) => p.nombre);
 
 
         const token = generateToken({
