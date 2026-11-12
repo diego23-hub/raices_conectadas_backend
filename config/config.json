@@ -1,0 +1,30 @@
+{
+  "development": {
+    "username": "root",
+    "password": null,
+    "database": "raices_conectadas",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "avnadmin",
+    "password": "AVNS_Gsj-PrzUnwOVsMnnuyy",
+    "database": "defaultdb",
+    "host": "raicesconectadas-raicesconectadas.g.aivencloud.com",
+    "port":15948,
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}

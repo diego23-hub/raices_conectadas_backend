@@ -1,0 +1,25 @@
+# Dependencias y entornos locales
+node_modules
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Variables de entorno y configuraciones locales
+.env
+.env.production
+.env.local
+
+# Control de versiones
+.git
+.gitignore
+
+# Documentación, pruebas y archivos temporales del proyecto
+README.md
+docs/
+coverage/
+tests/
+*.log
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
