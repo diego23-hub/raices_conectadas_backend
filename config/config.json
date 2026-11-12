@@ -15,7 +15,7 @@
   },
   "production": {
     "username": "avnadmin",
-    "password": "process.env.DB_PASSWORD",
+    "password": null,
     "database": "defaultdb",
     "host": "process.env.DB_HOST",
     "port":"process.env.DB_PORT",
