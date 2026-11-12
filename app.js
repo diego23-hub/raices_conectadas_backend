@@ -4,14 +4,16 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
     process.exit(1);
 };
 
-const express=require('express')
-const logger=require("./middlewares/logger")
+const express=require('express');
+const cors = require('cors');
+const logger=require("./middlewares/logger");
 const app=express();
+
 const helmet = require('helmet');
 app.use(helmet());
 
-const corsMiddleware=require("./middlewares/corsMiddleware");
-app.use(corsMiddleware);
+app.use(cors());
+
 const authenticate = require('./middlewares/authenticate');
 app.use(express.json());
 app.use(logger.logger);
