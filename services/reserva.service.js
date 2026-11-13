@@ -32,11 +32,21 @@ exports.create = async (idUsuario, datos) => {
     try {
         const cotizacion = await cotizar(idUsuario, datos.idPaquete, datos);
         const creada = await sequelize.transaction(async (t) => {
+            // Generamos un número de seguimiento temporal o aleatorio 
+            const codigoTemporal = 'RC-' + Math.floor(100000 + Math.random() * 900000);
+            
             const nueva = await Reserva.create(
-                { ...cotizacion, idUsuario, estado: 'pendiente' },
+                { 
+                    ...cotizacion, 
+                    idUsuario, 
+                    estado: 'pendiente',
+                    numSeguimiento: codigoTemporal // <--- Se envía desde el create inicial
+                },
                 { transaction: t }
             );
+            
             await nueva.update({ numSeguimiento: 1000 + nueva.id }, { transaction: t });
+            
             return nueva;
         });
         return await aRespuesta(creada);
