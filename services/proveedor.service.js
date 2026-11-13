@@ -1,5 +1,5 @@
 const { idPorNombre } = require('../utils/tipos');
-const { tipoProveedor: TipoProveedor } = require('../models');
+const { tipoProveedor: TipoProveedor, destino: Destino } = require('../models');
 const BusinessError = require('../errors/BusinessError');
 const SystemError=require('../errors/SystemError');
 const Proveedor = require('../models/proveedor.model');
@@ -20,12 +20,26 @@ const conTipo = async (proveedor) => {
 };
 
 exports.create = async (data) => {
-    try{
-        const { tipo, lugar, ...resto } = data;
+    try {
+        const { tipo, lugar, idDestino, ...resto } = data;
+        
+        // Si no viene 'lugar' pero viene 'idDestino', buscamos el nombre del destino en la BD
+        let ubicacionFinal = lugar;
+        if ((!ubicacionFinal || ubicacionFinal.trim() === '') && idDestino) {
+            const destinoObj = await Destino.findByPk(idDestino);
+            if (destinoObj) ubicacionFinal = destinoObj.nombre;
+        }
+
         const idTipoProveedor = await idPorNombre(TipoProveedor, tipo, 'Tipo de proveedor');
-        const creado = await Proveedor.create({ ...resto, ubicacion:lugar ?? resto.ubicacion, idTipoProveedor });
+        
+        const creado = await Proveedor.create({ 
+            ...resto, 
+            idDestino, 
+            ubicacion: ubicacionFinal || 'No especificada', 
+            idTipoProveedor 
+        });
         return (await conTipo([creado]))[0];
-    }catch(error){
+    } catch(error) {
         handleError(error, 'Error creando el proveedor');
     }
 };
@@ -48,20 +62,29 @@ exports.getById = async (id) => {
     }
 };
 
-exports.update = async (id,data) => {
-    try{
+exports.update = async (id, data) => {
+    try {
         const proveedor = await Proveedor.findByPk(id);
         if (!proveedor) {
             throw new BusinessError('Proveedor no encontrado');
         }
-        const { tipo, lugar, ...resto } = data;
-        if (lugar !== undefined) resto.ubicacion = lugar;
+        const { tipo, lugar, idDestino, ...resto } = data;
+        let ubicacionFinal = lugar;
+
+        if ((!ubicacionFinal || ubicacionFinal.trim() === '') && (idDestino || proveedor.idDestino)) {
+            const destinoObj = await Destino.findByPk(idDestino || proveedor.idDestino);
+            if (destinoObj) ubicacionFinal = destinoObj.nombre;
+        }
+
+        if (ubicacionFinal !== undefined && ubicacionFinal.trim() !== '') {
+            resto.ubicacion = ubicacionFinal;
+        }
+        if (idDestino !== undefined) resto.idDestino = idDestino;
         if (tipo !== undefined) {
             resto.idTipoProveedor = await idPorNombre(TipoProveedor, tipo, 'Tipo de proveedor');
         }
         return (await conTipo([await proveedor.update(resto)]))[0];
-
-    }catch(error){
+    } catch(error) {
         handleError(error, 'Error al actualizar el proveedor');
     }
 };
