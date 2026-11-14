@@ -72,7 +72,7 @@ module.exports = {
           allowNull:false
         },
         numSeguimiento:{
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING,
           allowNull:false
         }
       }
