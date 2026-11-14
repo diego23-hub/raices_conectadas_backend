@@ -19,7 +19,7 @@ const handleError = (error, defaultMessage) => {
 // SIMULACIÓN DE PASARELA (demo académica). En producción se reemplaza por un proveedor
 // real (p. ej. BOLD) con webhook verificado por firma, clave de idempotencia y
 // referencia externa. Probabilidad de rechazo configurable en el .env.
-const PROB_RECHAZO = Number(process.env.PAGO_PROB_RECHAZO ?? 0.2);
+const PROB_RECHAZO = Number(process.env.PAGO_PROB_RECHAZO ?? 0.9);
 
 exports.pagar = async (id, idUsuario, metodo) => {
     try {
