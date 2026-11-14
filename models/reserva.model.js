@@ -67,7 +67,7 @@ const reserva = sequelize.define(
             allowNull: false
         },
         numSeguimiento:{
-            type:DataTypes.INTEGER,
+            type:DataTypes.STRING,
             allowNull: true, 
             unique:true
         }
