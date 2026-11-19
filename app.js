@@ -34,6 +34,11 @@ const reservaRoutes=require("./routes/reserva.routes");
 const authRoutes=require("./routes/auth.routes");
 const rolRoutes=require("./routes/rol.routes");
 
+app.get('/health', async (req, res) => {
+  try { await sequelize.authenticate(); res.json({ estado: 'ok' }); }
+  catch { res.status(503).json({ estado: 'sin base de datos' }); }
+});
+
 app.use('/usuario', usuarioRoutes);
 app.use('/destino', destinoRoutes);
 app.use('/evento', eventoRoutes);
