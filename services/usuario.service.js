@@ -24,13 +24,25 @@ const REGLAS = {
     contrasena: (v) => v.length >= 8 && v.length <= 100
 };
 
+const ETIQUETAS = {
+    numDoc: 'número de documento',
+    nombres: 'nombres',
+    apellidos: 'apellidos',
+    telefono: 'número de teléfono',
+    correo: 'correo electrónico',
+    contrasena: 'contraseña'
+};
+
 const validar = (datos, { parcial = false } = {}) => {
     for (const [campo, esValido] of Object.entries(REGLAS)) {
+        const nombreLegible = ETIQUETAS[campo] || campo;
         if (datos[campo] === undefined) {
-            if (!parcial) throw new BusinessError(`El campo ${campo} es obligatorio`);
+            if (!parcial) throw new BusinessError(`El ${nombreLegible} es obligatorio`);
             continue;
         }
-        if (!esValido(String(datos[campo]))) throw new BusinessError(`El campo ${campo} no es válido`);
+        if (!esValido(String(datos[campo]))) {
+            throw new BusinessError(`El ${nombreLegible} no es válido`);
+        }
     }
 };
 
